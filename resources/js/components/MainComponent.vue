@@ -1,6 +1,6 @@
 <template lang="">
     <v-app>
-        <div class="container">
+        <div class="container pa-10">
             <div class="d-flex justify-center align-center">
                 <v-btn
                     success
@@ -73,14 +73,9 @@
                     </v-card-actions>
                 </v-card>
 
-                <v-card class="my-0" v-if="!articles">
-                    <v-card-title
-                        class="text-h5 card-title-text font-weight-light pa-2 px-3"
-                    >
-                    </v-card-title>
-                    <v-divider class="my-0"></v-divider>
+                <v-card class="my-0" v-if="!hasArticle">
                     <v-card-text class="py-2">
-                        <v-container class="dialog-container mt-2">
+                        <v-container class="mt-2">
                             <v-row>
                                 <p class="text-body">No articles posted</p>
                             </v-row>
@@ -278,11 +273,10 @@ export default {
             image_url: "",
             selected_article: "",
             articles: [],
+            hasArticle: false,
         };
     },
     methods: {
-        like_article() {},
-        unlike_article() {},
         create() {
             this.dialogCreateArticle = true;
         },
@@ -313,6 +307,11 @@ export default {
                     console.log(res.data);
                     this.articles = res.data;
                     let arr = res.data;
+                    if (arr.length > 0) {
+                        this.hasArticle = true;
+                    } else {
+                        this.hasArticle = false;
+                    }
                 })
                 .catch((error) => {
                     if (error.response.status === 401) {
@@ -329,7 +328,7 @@ export default {
             };
             this.loading = true;
             axios
-                .get("/delete", form)
+                .post("/delete", form)
                 .then((res) => {
                     alert("Successfully Deleted");
                     this.getArticles();
@@ -346,7 +345,7 @@ export default {
                 id: id,
             };
             axios
-                .get("/like-article", form)
+                .post("/like-article", form)
                 .then((res) => {
                     this.getArticles();
                 })
@@ -360,7 +359,7 @@ export default {
                 id: id,
             };
             axios
-                .get("/unlike-article", form)
+                .post("/unlike-article", form)
                 .then((res) => {
                     this.getArticles();
                 })

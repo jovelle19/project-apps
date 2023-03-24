@@ -76,7 +76,8 @@ class ArticleController extends Controller
 
   public function delete(Request $request)
   {
-    $data = Articles::where($request->id)->delete();
+    $data = Articles::find($request->id);
+    $data->delete();
     return response()->json($data);
   }
 
@@ -87,7 +88,6 @@ class ArticleController extends Controller
     DB::beginTransaction();
 
     $data = Articles::find($request->id);
-
     if($data->likes == null )
     {
         $likes = 0;
@@ -109,9 +109,16 @@ class ArticleController extends Controller
   public function unlikeArticle(Request $request)
   {
     DB::beginTransaction();
-
+    $unlikes = 0;
     $data = Articles::find($request->id);
-    $data->unlikes = (int)$data->unlikes - 1;
+    if($data->unlikes == null )
+    {
+        $unlikes = 0;
+    }
+    else{
+        $unlikes = $data->unlikes;
+    }
+    $data->unlikes = (int)$unlikes - 1;
     try{
       $data->save();
       DB::commit();

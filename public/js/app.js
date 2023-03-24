@@ -5352,16 +5352,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _Articles_index_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Articles/index.vue */ "./resources/js/components/Articles/index.vue");
-var _methods;
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
-//
-//
-//
-//
-//
 //
 //
 //
@@ -5636,12 +5626,11 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
       form: {},
       image_url: "",
       selected_article: "",
-      articles: []
+      articles: [],
+      hasArticle: false
     };
   },
-  methods: (_methods = {
-    like_article: function like_article() {},
-    unlike_article: function unlike_article() {},
+  methods: {
     create: function create() {
       this.dialogCreateArticle = true;
     },
@@ -5668,6 +5657,11 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
         console.log(res.data);
         _this2.articles = res.data;
         var arr = res.data;
+        if (arr.length > 0) {
+          _this2.hasArticle = true;
+        } else {
+          _this2.hasArticle = false;
+        }
       })["catch"](function (error) {
         if (error.response.status === 401) {}
       });
@@ -5682,7 +5676,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
         id: this.selectedId
       };
       this.loading = true;
-      axios__WEBPACK_IMPORTED_MODULE_0___default().get("/delete", form).then(function (res) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default().post("/delete", form).then(function (res) {
         alert("Successfully Deleted");
         _this3.getArticles();
         _this3.dialogDelete = false;
@@ -5690,31 +5684,34 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
       })["catch"](function (error) {
         if (error.response.status === 401) {}
       });
+    },
+    like_article: function like_article(id) {
+      var _this4 = this;
+      var form = {
+        id: id
+      };
+      axios__WEBPACK_IMPORTED_MODULE_0___default().post("/like-article", form).then(function (res) {
+        _this4.getArticles();
+      })["catch"](function (error) {
+        if (error.response.status === 401) {}
+      });
+    },
+    unlike_article: function unlike_article(id) {
+      var _this5 = this;
+      var form = {
+        id: id
+      };
+      axios__WEBPACK_IMPORTED_MODULE_0___default().post("/unlike-article", form).then(function (res) {
+        _this5.getArticles();
+      })["catch"](function (error) {
+        if (error.response.status === 401) {}
+      });
+    },
+    showArticle: function showArticle(data) {
+      this.dialogShowArticle = true;
+      this.selectedArticle = data;
     }
-  }, _defineProperty(_methods, "like_article", function like_article(id) {
-    var _this4 = this;
-    var form = {
-      id: id
-    };
-    axios__WEBPACK_IMPORTED_MODULE_0___default().get("/like-article", form).then(function (res) {
-      _this4.getArticles();
-    })["catch"](function (error) {
-      if (error.response.status === 401) {}
-    });
-  }), _defineProperty(_methods, "unlike_article", function unlike_article(id) {
-    var _this5 = this;
-    var form = {
-      id: id
-    };
-    axios__WEBPACK_IMPORTED_MODULE_0___default().get("/unlike-article", form).then(function (res) {
-      _this5.getArticles();
-    })["catch"](function (error) {
-      if (error.response.status === 401) {}
-    });
-  }), _defineProperty(_methods, "showArticle", function showArticle(data) {
-    this.dialogShowArticle = true;
-    this.selectedArticle = data;
-  }), _methods),
+  },
   mounted: function mounted() {
     this.getArticles();
   }
@@ -29324,7 +29321,7 @@ var render = function () {
   return _c("v-app", [
     _c(
       "div",
-      { staticClass: "container" },
+      { staticClass: "container pa-10" },
       [
         _c(
           "div",
@@ -29518,25 +29515,18 @@ var render = function () {
                 : _vm._e()
             }),
             _vm._v(" "),
-            !_vm.articles
+            !_vm.hasArticle
               ? _c(
                   "v-card",
                   { staticClass: "my-0" },
                   [
-                    _c("v-card-title", {
-                      staticClass:
-                        "text-h5 card-title-text font-weight-light pa-2 px-3",
-                    }),
-                    _vm._v(" "),
-                    _c("v-divider", { staticClass: "my-0" }),
-                    _vm._v(" "),
                     _c(
                       "v-card-text",
                       { staticClass: "py-2" },
                       [
                         _c(
                           "v-container",
-                          { staticClass: "dialog-container mt-2" },
+                          { staticClass: "mt-2" },
                           [
                             _c("v-row", [
                               _c("p", { staticClass: "text-body" }, [
