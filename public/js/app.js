@@ -5606,6 +5606,25 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -5615,6 +5634,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
+      isAddComment: false,
+      comment: "",
       selectedArticle: "",
       selectedId: "",
       loading: false,
@@ -5710,6 +5731,13 @@ __webpack_require__.r(__webpack_exports__);
     showArticle: function showArticle(data) {
       this.dialogShowArticle = true;
       this.selectedArticle = data;
+    },
+    addComment: function addComment() {
+      this.isAddComment = true;
+    },
+    closeComment: function closeComment() {
+      this.isAddComment = false;
+      this.comment = "";
     }
   },
   mounted: function mounted() {
@@ -29351,7 +29379,7 @@ var render = function () {
               return _vm.articles
                 ? _c(
                     "v-card",
-                    { key: article.id, staticClass: "my-0" },
+                    { key: article.id, staticClass: "my-3" },
                     [
                       _c(
                         "v-card-title",
@@ -29806,20 +29834,17 @@ var render = function () {
                     _vm._v(" "),
                     _c(
                       "v-card-text",
-                      {
-                        staticClass:
-                          "d-flex flex-column justify-center align-center",
-                      },
+                      { staticClass: "pa-8" },
                       [
                         _c(
-                          "p",
+                          "v-row",
                           {
                             staticClass:
                               "text-capitalize font-weight-black text-center",
                           },
                           [
                             _vm._v(
-                              "\n                            " +
+                              "\n                            Title: " +
                                 _vm._s(_vm.selectedArticle.title) +
                                 "\n                        "
                             ),
@@ -29827,25 +29852,58 @@ var render = function () {
                         ),
                         _vm._v(" "),
                         _c(
-                          "p",
+                          "v-row",
                           { staticClass: "text-capitalize text-center" },
                           [
                             _vm._v(
-                              "\n                            " +
+                              "\n                            Content: " +
                                 _vm._s(_vm.selectedArticle.content) +
                                 "\n                        "
                             ),
                           ]
                         ),
                         _vm._v(" "),
-                        _c("p", { staticClass: "text-body text-center" }, [
+                        _c("v-row", { staticClass: "text-body text-center" }, [
                           _vm._v(
                             "\n                            " +
                               _vm._s(_vm.selectedArticle.created_at) +
                               "\n                        "
                           ),
                         ]),
-                      ]
+                        _vm._v(" "),
+                        _c(
+                          "v-row",
+                          [
+                            _c(
+                              "v-col",
+                              [
+                                _vm.isAddComment
+                                  ? _c("v-textarea", {
+                                      staticClass: "custom-placeholder-color",
+                                      attrs: {
+                                        type: "text",
+                                        variant: "filled",
+                                        "auto-grow": "",
+                                        outlined: "",
+                                        required: "",
+                                      },
+                                      model: {
+                                        value: _vm.comment,
+                                        callback: function ($$v) {
+                                          _vm.comment = $$v
+                                        },
+                                        expression: "comment",
+                                      },
+                                    })
+                                  : _vm._e(),
+                              ],
+                              1
+                            ),
+                          ],
+                          1
+                        ),
+                      ],
+                      1
                     ),
                     _vm._v(" "),
                     _c(
@@ -29867,6 +29925,23 @@ var render = function () {
                           [
                             _vm._v(
                               "\n                            Close\n                        "
+                            ),
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "v-btn",
+                          {
+                            attrs: { dense: "", color: "primary" },
+                            on: {
+                              click: function ($event) {
+                                return _vm.addComment(_vm.article.id)
+                              },
+                            },
+                          },
+                          [
+                            _vm._v(
+                              "\n                            Add Comment\n                        "
                             ),
                           ]
                         ),

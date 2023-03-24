@@ -15,7 +15,7 @@
 
             <div cols="12" lg="10" md="12" class="py-3 px-8">
                 <v-card
-                    class="my-0"
+                    class="my-3"
                     v-for="article in articles"
                     :key="article.id"
                     v-if="articles"
@@ -186,20 +186,32 @@
                                 >mdi-close</v-icon
                             >
                         </v-card-title>
-                        <v-card-text
-                            class="d-flex flex-column justify-center align-center"
-                        >
-                            <p
+                        <v-card-text class="pa-8">
+                            <v-row
                                 class="text-capitalize font-weight-black text-center"
                             >
-                                {{ selectedArticle.title }}
-                            </p>
-                            <p class="text-capitalize text-center">
-                                {{ selectedArticle.content }}
-                            </p>
-                            <p class="text-body text-center">
+                                Title: {{ selectedArticle.title }}
+                            </v-row>
+                            <v-row class="text-capitalize text-center">
+                                Content: {{ selectedArticle.content }}
+                            </v-row>
+                            <v-row class="text-body text-center">
                                 {{ selectedArticle.created_at }}
-                            </p>
+                            </v-row>
+                            <v-row>
+                                <v-col>
+                                    <v-textarea
+                                        v-if="isAddComment"
+                                        class="custom-placeholder-color"
+                                        type="text"
+                                        variant="filled"
+                                        auto-grow
+                                        outlined
+                                        required
+                                        v-model="comment"
+                                    ></v-textarea>
+                                </v-col>
+                            </v-row>
                         </v-card-text>
                         <v-card-actions class="">
                             <v-spacer></v-spacer>
@@ -209,6 +221,13 @@
                                 @click="dialogShowArticle = false"
                             >
                                 Close
+                            </v-btn>
+                            <v-btn
+                                dense
+                                color="primary"
+                                @click="addComment(article.id)"
+                            >
+                                Add Comment
                             </v-btn>
                         </v-card-actions>
                     </v-card>
@@ -261,6 +280,8 @@ export default {
     },
     data() {
         return {
+            isAddComment: false,
+            comment: "",
             selectedArticle: "",
             selectedId: "",
             loading: false,
@@ -371,6 +392,13 @@ export default {
         showArticle(data) {
             this.dialogShowArticle = true;
             this.selectedArticle = data;
+        },
+        addComment() {
+            this.isAddComment = true;
+        },
+        closeComment() {
+            this.isAddComment = false;
+            this.comment = "";
         },
     },
     mounted() {
